@@ -1,0 +1,1 @@
+{"dtype": "int32", "format": "<i4", "long_name": "trajectory experiment point ID", "shape": [901], "target": "/entry/DAS_logs/trajectory/experimentPointID"}

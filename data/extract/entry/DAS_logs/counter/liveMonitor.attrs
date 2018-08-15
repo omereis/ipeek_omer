@@ -1,0 +1,1 @@
+{"axes": "sampleThetaMotor/softPosition", "dtype": "int32", "format": "<i4", "long_name": "counter live monitor", "shape": [901], "signal": 1, "target": "/entry/DAS_logs/counter/liveMonitor", "units": ""}

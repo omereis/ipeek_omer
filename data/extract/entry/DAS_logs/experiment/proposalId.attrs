@@ -1,0 +1,1 @@
+{"dtype": "|S5", "format": "|S5", "long_name": "experiment proposal id", "shape": [1], "target": "/entry/DAS_logs/experiment/proposalId"}

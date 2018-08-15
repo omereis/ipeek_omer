@@ -1,0 +1,1 @@
+findPeakMulti "sampleThetaMotor" --channel 6 --filePrefix "fp_sampleThetaMotor.softPosition" --fit "GaussianPlusBackground" -r ["180"] -s ["0.2"] -t 1.0 --useBadFit

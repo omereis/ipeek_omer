@@ -1,0 +1,1 @@
+{"dtype": "float32", "format": "<f4", "long_name": "sample theta motor", "shape": [901], "target": "/entry/DAS_logs/sampleThetaMotor/softPosition", "units": "deg"}
