@@ -99,42 +99,48 @@
       req.send(); 
     };
     
-//-----------------------------------------------------------------------------
-/**/
-      function drawItemChart (item, a, data) {
-                      // that is, if it's a vector, draw
-//                  if (a.shape && a.shape.length && a.shape.length > 1) {
-        item.getValue().then(function(v) {
-          $("#device_values").empty().height(300);
-          var xdim = a.shape.slice(-2)[0];
-          var ydim = a.shape.slice(-1)[0];
-          var dims =  {
-                        xmin: 0,
-                        xmax: xdim,
-                        xdim: xdim,
-                        ymin: 0,
-                        ymax: ydim,
-                        ydim: ydim
-                      };
+    function loadData() {
+      var file_input = document.getElementById('datafile');
+      var file = file_input.files[0]; // only one file allowed
+      datafilename = file.name;
+      zipHandler(datafilename, file);
+      $("span#loaded_file").text(datafilename);
+      file_input.value = "";
+    }
+    
+    var fileinput = document.getElementById('datafile');
+    fileinput.onchange = loadData;
+//----------------------------------------------------------------------------- 
+    function displayItemChart (item) {
+      item.getValue().then(function(v) {
+        $("#device_values").empty().height(300);
+        var xdim = a.shape.slice(-2)[0];
+        var ydim = a.shape.slice(-1)[0];
+        var dims = {
+                    xmin: 0,
+                    xmax: xdim,
+                    xdim: xdim,
+                    ymin: 0,
+                    ymax: ydim,
+                    ydim: ydim
+                  };
           if (a.binary) {
             var size = xdim * ydim;
             var flattened = v.slice(0, size);
-          }
+          } 
           else {
             var z = (a.shape.length > 2) ? v[0] : v;
             var flattened = flatten_data(z).data;
-            console.log("a not binary. here's dim");
             console.log(dims);
- 
+                          
             var zmin = Infinity;
             var zmax = -Infinity;
             var zz;
             for (var i=0; i<data.length; i++) {
-              zz = flattened[i];
-              zmin = Math.min(zmin, zz);
-              zmax = Math.max(zmax, zz);
-            }
-            console.log('line 137, end of for loop');
+                            zz = flattened[i];
+                            zmin = Math.min(zmin, zz);
+                            zmax = Math.max(zmax, zz);
+                          }
                           /*
                           //var row;
                           for (var i=0; i<z.length; i++) {
@@ -145,7 +151,7 @@
                               zmax = Math.max(zmax, zz);
                             }
                           }
-                          **/
+                          */
                           //dims.zmin = zmin;
                           //dims.zmax = zmax;
                         }
@@ -172,21 +178,8 @@
                         chart.zoomScroll(true);
                       });
                       //$("#device_values").html('<pre class="value"> binary array </pre>');
-      }
-/**/
-//-----------------------------------------------------------------------------
-    function loadData() {
-      var file_input = document.getElementById('datafile');
-      var file = file_input.files[0]; // only one file allowed
-      datafilename = file.name;
-      zipHandler(datafilename, file);
-      $("span#loaded_file").text(datafilename);
-      file_input.value = "";
     }
-    
-    var fileinput = document.getElementById('datafile');
-    fileinput.onchange = loadData;
-    
+//-----------------------------------------------------------------------------
     function zipHandler(filename, file) {
       var autoscroll = false; // trigger a scroll for autoselected items.
         zip.createReader(new zip.BlobReader(file), function(reader) {
@@ -230,78 +223,12 @@
                     if (a.shape && a.shape.length > 1) { // min(a.shape, a.shape.length) > 1
                       // that is, if it's a vector, draw
 //                  if (a.shape && a.shape.length && a.shape.length > 1) {
-/*
-  item.getValue().then(function(v) {
-                        $("#device_values").empty().height(300);
-                        var xdim = a.shape.slice(-2)[0];
-                        var ydim = a.shape.slice(-1)[0];
-                        var dims = {
-                          xmin: 0,
-                          xmax: xdim,
-                          xdim: xdim,
-                          ymin: 0,
-                          ymax: ydim,
-                          ydim: ydim
-                        };
-                        if (a.binary) {
-                          var size = xdim * ydim;
-                          var flattened = v.slice(0, size);
-                          
-                        } 
-                        else {
-                          
-                          var z = (a.shape.length > 2) ? v[0] : v;
-                          var flattened = flatten_data(z).data;
-                          console.log("a not binary. here's dim");
-                          console.log(dims);
-                          
-                          var zmin = Infinity;
-                          var zmax = -Infinity;
-                          var zz;
-                          for (var i=0; i<data.length; i++) {
-                            zz = flattened[i];
-                            zmin = Math.min(zmin, zz);
-                            zmax = Math.max(zmax, zz);
-                          }
-                          /*
-                          //var row;
-                          for (var i=0; i<z.length; i++) {
-                            let row = z[i];
-                            for (var j=0; j<row.length; j++) {
-                              let zz = row[j];
-                              zmin = Math.min(zmin, zz);
-                              zmax = Math.max(zmax, zz);
-                            }
-                          }
-                          * /
-                          //dims.zmin = zmin;
-                          //dims.zmax = zmax;
-                        }
-                        
-                        if (chart && chart.destroy) { chart.destroy() }
-                        var plot_2d_options = {
-                          "ztransform": 'log',
-                          "aspect_ratio": 1.0,
-                          "autoscale": true,
-                          //"source_order": "F",
-                          axes: {
-                            xaxis: {label: 'x'},
-                            yaxis: {label: 'y'}
-                          }
-                        }
-                        chart = new heatChart.default(plot_2d_options);
-                        chart
-                          .colormap(colormap.get_colormap("jet"))
-                          .autoscale(true)
-                          .dims(dims);
-                        d3.select('#device_values')
-                          .data([flattened])
-                          .call(chart);
-                        chart.zoomScroll(true);
-                      });
-                      //$("#device_values").html('<pre class="value"> binary array </pre>');
-*/
-                      drawItemChart (item, a, data);
+                      try {
+                        displayItemChart (item);
+                      }
+                      catch (err) {
+                        window.alert (err.message);
+                      }
                     }
                     else {
                       item.getValueString().then(function(s) {
