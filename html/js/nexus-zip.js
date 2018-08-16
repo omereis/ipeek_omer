@@ -215,12 +215,14 @@ nz.Node.prototype = {
   file_readText: function(path) {
     // returns a Promise, to be resolved with the data.
     var entry =  this.root.zipfiles[path];
-    return new Promise(function(resolve, reject) {
+
+    promse_value = new Promise(function(resolve, reject) {
       if (entry == null) { resolve(null); return }
       else {
         entry.getData(new zip.TextWriter(), function(text) { resolve(text) });
       }
-    });    
+    });
+    return promse_value;
   },
   
   file_readBlob: function(path) {
@@ -309,6 +311,7 @@ nz.Field.prototype = {
         format_string;
         
     return this.getAttrs().then(function(a) {
+//    ret_value =  this.getAttrs().then(function(a) {
       attrs = a;
       if (attrs.binary) {
         return that.getValue().then(function(v) { return d3_tsvFormat(v) })
@@ -325,6 +328,7 @@ nz.Field.prototype = {
         });
       }
     });
+//    return (ret_value);
   },
   
   getValue: function() {
