@@ -154,20 +154,138 @@ function convertStringVec(s, min_max) {
       return dataLength;
     }
 //----------------------------------------------------------------------------- 
-    function displayItemChart (item, a, data, s) {
-      var series = new Array(), xys = [], xy = [], xMin, xMax, yMin, yMax;
-      var options = {series: series};
-      options.xtransform = 'linear';
-      options.ytransform = 'linear';
-      options.series[0] = {label: 'series' };
+    function get2dChartDims (a, xdim, ydim) {
+      xdim = a.shape.slice(-2)[0];
+      ydim = a.shape.slice(-1)[0];
+      var dims = {
+                xmin: 0,
+                xmax: xdim,
+                xdim: xdim,
+                ymin: 0,
+                ymax: ydim,
+                ydim: ydim
+            };
+      return dims;
+    }
+//----------------------------------------------------------------------------- 
+      function get2dOptions () {
 
-      var dataLength = getChartData(s, options, xys);
+        var plot_2d_options = {
+          "ztransform": 'log',
+          "aspect_ratio": 1.0,
+          "autoscale": true,
+          axes: {
+            xaxis: {label: 'x'},
+            yaxis: {label: 'y'}
+          }
+        }
+        return plot_2d_options;
+      }
+/**/
+//----------------------------------------------------------------------------- 
+    function displayItemChart2D (s) {
       $("#device_values").empty().height(300);
-      if (dataLength > 1) {
-        var chart = xyChart.default(options);
-        d3.select("#device_values").data([xys]);
-        d3.select("#device_values").call(chart);
-        chart.zoomRect(true);
+      var xdim, ydim, dim = {};
+      dims = get2dChartDims (a, xdim, ydim);
+      if (a.binary) {
+        var size = xdim * ydim;
+        var flattened = v.slice(0, size);
+      }
+      else {
+        var z = (a.shape.length > 2) ? v[0] : v;
+        var flattened = flatten_data(z).data;
+
+        var zmin = Infinity;
+        var zmax = -Infinity;
+        var zz;
+        for (var i=0; i<data.length; i++) {
+          zz = flattened[i];
+          zmin = Math.min(zmin, zz);
+          zmax = Math.max(zmax, zz);
+        }
+      }
+          if (chart && chart.destroy) {
+            chart.destroy()
+          }
+          var plot_2d_options = get2dOptions ();
+            chart = new heatChart.default(plot_2d_options);
+            chart
+                  .colormap(colormap.get_colormap("jet"))
+                  .autoscale(true)
+                  .dims(dims);
+            d3.select('#device_values')
+                  .data([flattened])
+                  .call(chart);
+            chart.zoomScroll(true);
+    }
+//----------------------------------------------------------------------------- 
+    function displayItemChart1D (s) {
+        var series = new Array(), xys = [], xy = [], xMin, xMax, yMin, yMax;
+        var options = {series: series};
+        options.xtransform = 'linear';
+        options.ytransform = 'linear';
+        options.series[0] = {label: 'series' };
+
+        var dataLength = getChartData(s, options, xys);
+        $("#device_values").empty().height(300);
+        if (dataLength > 1) {
+          var chart = xyChart.default(options);
+          d3.select("#device_values").data([xys]);
+          d3.select("#device_values").call(chart);
+          chart.zoomRect(true);
+        }
+    }
+//----------------------------------------------------------------------------- 
+    function getFlattenedData (a, v, data, dims, xdim, ydim) {
+      var flattened;
+      if (a.binary) {
+        var size = xdim * ydim;
+        var flattened = v.slice(0, size);
+      }
+      else {
+        var z = (a.shape.length > 2) ? v[0] : v;
+        var flattened = flatten_data(z).data;
+
+        var zmin = Infinity;
+        var zmax = -Infinity;
+        var zz;
+        for (var i=0; i<data.length; i++) {
+          zz = flattened[i];
+          zmin = Math.min(zmin, zz);
+          zmax = Math.max(zmax, zz);
+        }
+      }
+      return flattened;
+    }
+//----------------------------------------------------------------------------- 
+    function displayItemChart2D (item, a, data, s) {
+        item.getValue().then(function(v) {
+          var xdim, ydim;
+          $("#device_values").empty().height(300);
+          var dims = get2dChartDims (a, xdim, ydim);
+          var flattened = getFlattenedData (a, v, data, dims, xdim, ydim);
+          if (chart && chart.destroy) {
+            chart.destroy()
+          }
+          var plot_2d_options = get2dOptions ();
+          chart = new heatChart.default(plot_2d_options);
+          chart.colormap(colormap.get_colormap("jet"))
+                .autoscale(true)
+                .dims(dims);
+          d3.select('#device_values')
+            .data([flattened])
+            .call(chart);
+          chart.zoomScroll(true);
+        });
+    }
+//----------------------------------------------------------------------------- 
+    function displayItemChart (item, a, data, s) {
+      if (a.shape && a.shape.length > 1) {
+        displayItemChart2D (item, a, data, s);
+// that is, if it's a vector, draw if (a.shape && a.shape.length && a.shape.length > 1) {
+      }
+      else {
+        displayItemChart1D (s);
       }
     }
 //-----------------------------------------------------------------------------
@@ -204,20 +322,19 @@ function convertStringVec(s, min_max) {
               });
               f.get(id).then(function(item) {
                 item.getAttrs().then(function(a) {
-//                  $("#device_attrs")
                   panelAttrs.html("<pre>" + JSON.stringify(a, null, 2).replace(">", "&gt;").replace("<", "&lt;") + "</pre>");
                   var deviceValues = $("#device_values");
                   $("#device_values").height('auto');
                   panelAlphaNum.height('auto');
                   if (!isdir) {
                       // that is, if it's a vector, draw
-//                  if (a.shape && a.shape.length && a.shape.length > 1) {
                     item.getValueString().then(function(s) {
                         displayItemChart (item, a, data, s);
                         panelAlphaNum.html('<pre class="value">' + s + '</pre>');
                       });
                   }
                   else {
+                    panelAlphaNum.html('<pre> </pre>');
                     $("#device_values").html("<pre>Group</pre>");
                     data.instance.toggle_node(data.node);
                   }
