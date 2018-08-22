@@ -1,1 +1,0 @@
-{"axes": "sampleThetaMotor/softPosition", "dtype": "float32", "format": "<f4", "long_name": "counter live time", "shape": [1], "signal": 1, "target": "/entry/DAS_logs/counter/liveTime", "units": "s"}

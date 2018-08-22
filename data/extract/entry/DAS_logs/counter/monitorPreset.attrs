@@ -1,1 +1,0 @@
-{"dtype": "int32", "format": "<i4", "long_name": "counter monitor preset", "shape": [1], "target": "/entry/DAS_logs/counter/monitorPreset", "units": ""}

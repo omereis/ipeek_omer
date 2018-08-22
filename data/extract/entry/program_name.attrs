@@ -1,1 +1,0 @@
-{"configuration": "findPeakMulti \"sampleThetaMotor\" --filePrefix \"\" --fit \"GaussianPlusBackground\" -r [\"180\"] -s [\"0.2\"] -t 1.0 --useBadFit", "dtype": "|S4", "format": "|S4", "long_name": "program", "shape": [1], "version": "0"}

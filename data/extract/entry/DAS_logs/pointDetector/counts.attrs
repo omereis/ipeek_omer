@@ -1,1 +1,0 @@
-{"axes": "sampleThetaMotor/softPosition", "dtype": "int32", "format": "<i4", "long_name": "point detector", "shape": [901, 1], "signal": 1, "target": "/entry/DAS_logs/pointDetector/counts", "units": ""}

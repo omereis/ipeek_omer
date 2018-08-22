@@ -1,1 +1,0 @@
-{"axes": "sampleThetaMotor/softPosition", "dtype": "int32", "format": "<i4", "long_name": "aux detector", "shape": [1, 13], "signal": 1, "target": "/entry/DAS_logs/auxDetector/counts", "units": ""}
