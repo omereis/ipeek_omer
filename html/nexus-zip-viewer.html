@@ -280,9 +280,9 @@ function convertStringVec(s, min_max) {
     }
 //----------------------------------------------------------------------------- 
     function displayItemChart (item, a, data, s) {
-      if (a.shape && a.shape.length > 1) {
-        displayItemChart2D (item, a, data, s);
+      if (a.shape && (a.shape.length > 1)) {
 // that is, if it's a vector, draw if (a.shape && a.shape.length && a.shape.length > 1) {
+  displayItemChart2D (item, a, data, s);
       }
       else {
         displayItemChart1D (s);
