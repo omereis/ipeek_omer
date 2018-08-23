@@ -16,6 +16,7 @@ data/
 *.orig
 *.nxz
 rapid*.dat
+ncnrdata/
 
 var
 sdist
