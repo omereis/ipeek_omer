@@ -11,8 +11,12 @@ build
 eggs
 parts
 bin
-data
+
+data/
 *.orig
+*.nxz
+rapid*.dat
+
 var
 sdist
 develop-eggs
