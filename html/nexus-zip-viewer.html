@@ -117,7 +117,7 @@
         this.xMax = this.yMax =  Infinity;
       }
     }
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
 function convertStringVec(s, min_max) {
   var n, m, y, val_arr = s.split("\n"), xy = [];
 
@@ -135,7 +135,7 @@ function convertStringVec(s, min_max) {
   }
   return xy;
 }
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
     function getChartData(s, options, xys) {
       var xy = [], dataLength = 0;
       var min_max = new chartMinMax();
@@ -153,7 +153,7 @@ function convertStringVec(s, min_max) {
       }
       return dataLength;
     }
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
     function get2dChartDims (a, xdim, ydim) {
       xdim = a.shape.slice(-2)[0];
       ydim = a.shape.slice(-1)[0];
@@ -167,7 +167,7 @@ function convertStringVec(s, min_max) {
             };
       return dims;
     }
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
       function get2dOptions () {
 
         var plot_2d_options = {
@@ -181,8 +181,7 @@ function convertStringVec(s, min_max) {
         }
         return plot_2d_options;
       }
-/**/
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
     function displayItemChart2D (s) {
       $("#device_values").empty().height(300);
       var xdim, ydim, dim = {};
@@ -218,7 +217,7 @@ function convertStringVec(s, min_max) {
                   .call(chart);
             chart.zoomScroll(true);
     }
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
     function displayItemChart1D (s) {
         var series = new Array(), xys = [], xy = [], xMin, xMax, yMin, yMax;
         var options = {series: series};
@@ -235,7 +234,7 @@ function convertStringVec(s, min_max) {
           chart.zoomRect(true);
         }
     }
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
     function getFlattenedData (a, v, data, dims, xdim, ydim) {
       var flattened;
       if (a.binary) {
@@ -257,7 +256,7 @@ function convertStringVec(s, min_max) {
       }
       return flattened;
     }
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
     function displayItemChart2D (item, a, data, s) {
         item.getValue().then(function(v) {
           var xdim, ydim;
@@ -278,7 +277,7 @@ function convertStringVec(s, min_max) {
           chart.zoomScroll(true);
         });
     }
-//----------------------------------------------------------------------------- 
+//-----------------------------------------------------------------------------
     function displayItemChart (item, a, data, s) {
       if (a.shape && (a.shape.length > 1)) {
 // that is, if it's a vector, draw if (a.shape && a.shape.length && a.shape.length > 1) {

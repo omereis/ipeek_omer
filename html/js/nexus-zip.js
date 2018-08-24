@@ -112,7 +112,9 @@ nz.Node.prototype = {
   
   getAttrs: function() {
     // use cached value if not null:
-    if (this._attrs != null) { return Promise.resolve(this._attrs) }
+    if (this._attrs != null) {
+      return Promise.resolve(this._attrs);
+    }
     else { 
       var that = this;
       var attrs_promise = this.file_readText(lstrip(this.path + this._attrs_filename, "/"))
@@ -291,7 +293,6 @@ nz.Field.prototype = {
   getAttrs: function() {
     // use cached value if not null:
     if (this._attrs != null) {
-      promise_value = Promise.resolve(this._attrs);
       return Promise.resolve(this._attrs);
     }
     else { 
@@ -314,7 +315,6 @@ nz.Field.prototype = {
         format_string;
         
     return this.getAttrs().then(function(a) {
-//    ret_value =  this.getAttrs().then(function(a) {
       attrs = a;
       if (attrs.binary) {
         return that.getValue().then(function(v) { return d3_tsvFormat(v) })
@@ -330,18 +330,6 @@ nz.Field.prototype = {
             return s;
           }
         });
-/*
-        attributes = root.file_readText(path).then(function(s) {
-          if (/[s]/.test(attrs.format[1].toLowerCase())) { 
-            return s.replace(/\\n/g, '\n')
-                    .replace(/\\t/g, '\t')
-                    .replace(/\\r/g, '\r');
-          } else {
-            return s;
-          }
-        });
-        console.log ('type of attributes: ' + typeof attribute);
-*/
         return root.file_readText(path).then(function(s) {
           if (/[s]/.test(attrs.format[1].toLowerCase())) { 
             return s.replace(/\\n/g, '\n')
@@ -353,7 +341,6 @@ nz.Field.prototype = {
         });
       }
     });
-//    return (ret_value);
   },
   
   getValue: function() {
